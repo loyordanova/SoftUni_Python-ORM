@@ -9,4 +9,4 @@ class Product(models.Model):
     supplier = models.CharField()
     created_on = models.DateTimeField(auto_now_add=True)
     last_edited_on = models.DateTimeField(auto_now=True)
-    
+    barcode = models.IntegerField()
