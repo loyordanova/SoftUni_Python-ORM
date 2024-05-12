@@ -1,46 +1,47 @@
 from django.test import TestCase
 
-from caller import show_all_locations
-from main_app.models import Location
+from caller import get_deluxe_rooms
+from main_app.models import HotelRoom
 
 
-class LocationTestCase(TestCase):
+class HotelRoomTestCase(TestCase):
     def setUp(self):
-        """
-        SetUp only for the zero tests
-        """
-        Location.objects.create(
-            name='Sofia',
-            region='Sofia Region',
-            population=1329000,
-            description='The capital of Bulgaria and the largest city in the country',
-            is_capital=False
+        self.room4 = HotelRoom.objects.create(
+            room_number=401,
+            room_type='Standard',
+            capacity=2,
+            amenities='TV',
+            price_per_night=100.00,
+            is_reserved=True
         )
 
-        Location.objects.create(
-            name='Plovdiv',
-            region='Plovdiv Region',
-            population=346942,
-            description='The second-largest city in Bulgaria with a rich historical heritage',
-            is_capital=False
+        self.room5 = HotelRoom.objects.create(
+            room_number=501,
+            room_type='Deluxe',
+            capacity=3,
+            amenities='Wi-Fi',
+            price_per_night=200.00,
+            is_reserved=True
         )
 
-        Location.objects.create(
-            name='Varna',
-            region='Varna Region',
-            population=330486,
-            description='A city known for its sea breeze and beautiful beaches on the Black Sea',
-            is_capital=False
+        self.room6 = HotelRoom.objects.create(
+            room_number=601,
+            room_type='Deluxe',
+            capacity=6,
+            amenities='Jacuzzi',
+            price_per_night=400.00,
+            is_reserved=False
         )
 
-    def test_zero_show_all_locations(self):
+    def test_zero_get_deluxe_rooms(self):
         """
-        Test whether the show_all_locations function returns all locations sorted by ID (descending).
+        Test the get_deluxe_rooms() function when there's only one Deluxe room.
+        Ensure it returns the correct information about the deluxe room.
+
+        NOTE: Uses only self.room4; self.room5 and self.room6!!!
         """
-        response = show_all_locations()
-        expected_output = (
-            'Varna has a population of 330486!\n'
-            'Plovdiv has a population of 346942!\n'
-            'Sofia has a population of 1329000!'
+        deluxe_rooms = get_deluxe_rooms()
+        expected_result = (
+            'Deluxe room with number 501 costs 200.00$ per night!'
         )
-        self.assertEqual(response.strip(), expected_output)
+        self.assertEqual(expected_result, deluxe_rooms)
