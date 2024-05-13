@@ -26,7 +26,7 @@ def create_pet(name: str, species: str):
 from main_app.models import Artifact
 
 def create_artifact(name: str, origin: str, age: int, description: str, is_magical: bool):
-    artifacts = Artifact.objects.create(
+    artifact = Artifact.objects.create(
         name=name,
         origin=origin,
         age=age,
@@ -34,19 +34,13 @@ def create_artifact(name: str, origin: str, age: int, description: str, is_magic
         is_magical=is_magical
     )
 
-    return f'The artifact {name} is {age} years old!'
+    return f'The artifact {artifact.name} is {artifact.age} years old!'
 
 
 def delete_all_artifacts():
     Artifact.objects.all().delete()
 
-
-def rename_artifact(artifact_object, rename_artifact):
-    artifact_object.name = rename_artifact
-    artifact_object.save()
-
 # print(create_artifact('Ancient Sword', 'Lost Kingdom', 500, 'A legendary sword with a rich history', True))
-
 # print(create_artifact('Crystal Amulet', 'Mystic Forest', 300, 'A magical amulet believed to bring good fortune', True))
 
 # third_exercise -----------------------------------------------------------------------------------------
@@ -83,38 +77,8 @@ def get_capitals():
 def delete_first_location():
     Location.objects.first().delete()
 
-# def create_locations():
-#     Location.objects.create(
-#             name='Sofia',
-#             region='Sofia Region',
-#             population=1329000,
-#             description='The capital of Bulgaria and the largest city in the country',
-#             is_capital=False
-#         )
-
-#     Location.objects.create(
-#             name='Plovdiv',
-#             region='Plovdiv Region',
-#             population=346942,
-#             description='The second-largest city in Bulgaria with a rich historical heritage',
-#             is_capital=False
-#         )
-
-#     Location.objects.create(
-#             name='Varna',
-#             region='Varna Region',
-#             population=330486,
-#             description='A city known for its sea breeze and beautiful beaches on the Black Sea',
-#             is_capital=False
-#         )
-    
-# create_locations()
-# print(show_all_locations())
-# print(new_capital())
-# print(get_capitals())
-
 # forth_exercise -----------------------------------------------------------------------------------------
-
+    
 from main_app.models import Car
 
 def apply_discount():
@@ -134,32 +98,29 @@ def get_recent_cars():
 def delete_last_car():
     Car.objects.last().delete()
 
-# def create_cars():
-#     Car.objects.create(
-#         model='Mercedes C63 AMG',
-#         year='2019',
-#         color='white',
-#         price='120000.00'
-#     )
+def create_cars():
+    Car.objects.create(
+        model='Mercedes C63 AMG',
+        year='2019',
+        color='white',
+        price='120000.00'
+    )
 
-#     Car.objects.create(
-#         model='Audi Q7 S line',
-#         year='2023',
-#         color='black',
-#         price='183900.00'
-#     )
+    Car.objects.create(
+        model='Audi Q7 S line',
+        year='2023',
+        color='black',
+        price='183900.00'
+    )
 
-#     Car.objects.create(
-#         model='Chevrolet Corvette',
-#         year='2021',
-#         color='dark gray',
-#         price='199999.00'
-#     )
+    Car.objects.create(
+        model='Chevrolet Corvette',
+        year='2021',
+        color='dark gray',
+        price='199999.00'
+    )
     
 
-# create_cars()
-# apply_discount()
-# print(get_recent_cars())
 
 # fifth_exercise -----------------------------------------------------------------------------------------
 
@@ -167,9 +128,12 @@ from main_app.models import Task
 
 def show_unfinished_tasks():
     unfinished_tasks = Task.objects.filter(is_finished=False)
+
     result = []
+
     for task in unfinished_tasks:
         result.append(f"Task - {task.title} needs to be done until {task.due_date}!")
+
     return "\n".join(result)
 
 
@@ -181,25 +145,40 @@ def complete_odd_tasks():
 
 
 def encode_and_replace(text: str, task_title: str):
-    decoded_new_task = ""
-    for char in text:
-        decoded_new_task += chr(ord(char) - 3)
+    # one way to solve
 
-    for task in Task.objects.filter(title=task_title):
-        task.description = decoded_new_task
-        task.save()
+    # decoded_new_task = ""
+
+    # for char in text:
+    #     decoded_new_task += chr(ord(char) - 3)
+
+    # for task in Task.objects.filter(title=task_title):
+    #     task.description = decoded_new_task
+    #     task.save()
+    
+    # another way to solve
+    
+    # matching_title = Task.objects.filter(title=task_title)
+    # decoded_text = ''.join(chr(ord(char) - 3) for char in text)
+
+    # for task in matching_title:
+    #     task.description = decoded_text
+    #     task.save()
+
+    # best way to solve !
+        
+    decoded_text = ''.join(chr(ord(char) - 3) for char in text)
+    Task.objects.filter(title=task_title).update(description=decoded_text)
 
 # encode_and_replace("Zdvk#wkh#glvkhv$", "Sample Task")
 # print(Task.objects.get(title ='Sample Task') .description)
-
-# sixth_exercise -----------------------------------------------------------------------------------------
+    
+    # sixth_exercise -----------------------------------------------------------------------------------------
 
 from main_app.models import HotelRoom
 
 def get_deluxe_rooms():
-
     all_deluxe_rooms = HotelRoom.objects.filter(room_type="Deluxe")
-
     result = []
 
     for room in all_deluxe_rooms:
@@ -208,25 +187,33 @@ def get_deluxe_rooms():
 
     return "\n".join(result)
 
-# test code
-print(get_deluxe_rooms())
+
 def increase_room_capacity():
     rooms = HotelRoom.objects.all().order_by('id')
     previous_capacity = 0
 
     for room in rooms:
-
-        if room.is_reserved:
-            if room.id == HotelRoom.objects.first().id:
-                room.capacity += room.id
-            else:
-                room.capacity += previous_capacity
-            room.save()
-
+        if not room.is_reserved:
+            continue
+        if previous_capacity:
+            room.capacity += previous_capacity
+        else:
+            room.capacity += room.id
+        
         previous_capacity = room.capacity
 
+        room.save()
+        # if room.is_reserved:
+        #     if room.id == HotelRoom.objects.first().id:
+        #         room.capacity += room.id
+        #     else:
+        #         room.capacity += previous_capacity
+        # room.save()
 
-# increase_room_capacity()
+        # previous_capacity = room.capacity
+
+    
+
 def reserve_first_room():
     first_room = HotelRoom.objects.first()
     first_room.is_reserved = True
@@ -263,13 +250,15 @@ def delete_last_room():
 #             price_per_night=400.00,
 #             is_reserved=False
 #         )
-# # create_room()
+# create_room()
 
 # test code:
 
 # reserve_first_room()
+# print(get_deluxe_rooms())
 # print(HotelRoom.objects.get(room_number=601).is_reserved)
 # delete_last_room()
+
 
 # seventh_exercise -----------------------------------------------------------------------------------------
         
@@ -278,23 +267,40 @@ from django.db.models import Q, F
 
 def update_characters():
 
-    """
-    F expressions (F()):
+    # """
+    # F expressions (F()):
 
-    F() expressions allow you to reference model field values within a query, enabling you to perform operations directly in the database without retrieving the data into Python memory.
-    They are useful for updating or filtering based on the values of other fields within the same model.
-    For example, F("field_name") represents the value of the field field_name in the database.
+    # F() expressions allow you to reference model field values within a query, enabling you to perform operations directly in the database without retrieving the data into Python memory.
+    # They are useful for updating or filtering based on the values of other fields within the same model.
+    # For example, F("field_name") represents the value of the field field_name in the database.
 
-    Q objects (Q()):
+    # Q objects (Q()):
 
-    Q() objects are used to encapsulate complex query conditions, such as OR conditions, negations, and combinations of conditions.
-    They allow you to build dynamic queries with multiple conditions using logical operators like AND (&), OR (|), and NOT (~).
-    For example, Q(field1=value1) | Q(field2=value2) represents a query where either field1 equals value1 or field2 equals value2.
-    """
+    # Q() objects are used to encapsulate complex query conditions, such as OR conditions, negations, and combinations of conditions.
+    # They allow you to build dynamic queries with multiple conditions using logical operators like AND (&), OR (|), and NOT (~).
+    # For example, Q(field1=value1) | Q(field2=value2) represents a query where either field1 equals value1 or field2 equals value2.
+    # """
 
-    Character.objects.filter(class_name="Mage").update(level=F("level")+3, intelligence=F("intelligence")-7)
-    Character.objects.filter(class_name="Warrior").update(hit_points=F("hit_points") / 2, dexterity=F("dexterity") + 4)
-    Character.objects.filter(Q(class_name="Assassin") | Q(class_name="Scout")).update(inventory="The inventory is empty")
+    Character.objects.filter(class_name="Mage").update(
+        level=F("level")+3, 
+        intelligence=F("intelligence")-7
+    )
+
+    Character.objects.filter(class_name="Warrior").update(
+        hit_points=F("hit_points") / 2,
+          dexterity=F("dexterity") + 4
+    )
+
+    Character.objects.filter(Q(class_name="Assassin") | Q(class_name="Scout")).update(
+        inventory="The inventory is empty"
+    )
+
+
+    # another way
+
+    # Character.objects.filter(class_name__in=['Assassin', 'Scout']).update(
+    #     inventory='The inventory is empty'
+    # )
 
     # another way to solve 
 
@@ -314,5 +320,42 @@ def update_characters():
         
     #     character.save()
 
-def fuse_characters(first_character: obj, second_character: obj):
+def fuse_characters(first_character: Character, second_character: Character):
+    fusion_name  = first_character.name + ' ' + second_character.name
+    fusion_level = (first_character.level + second_character.level) // 2
+    fusion_class = 'Fusion'
+    fusion_strength = (first_character.strength + second_character.strength) * 1.2
+    fusion_dexterity = (first_character.dexterity + second_character.dexterity) * 1.4
+    fusion_intelligence = (first_character.intelligence + second_character.intelligence) * 1.5 
+    fusion_hit_points = (first_character.hit_points + second_character.hit_points)
+
+    if first_character.class_name in ['Mage', 'Scout']:
+        fusion_inventory = 'Bow of the Elven Lords, Amulet of Eternal Wisdom'
+    else:
+        fusion_inventory = 'Dragon Scale Armor, Excalibur'
     
+    Character.objects.create(
+        name=fusion_name,
+        class_name=fusion_class,
+        level=fusion_level,
+        strength=fusion_strength,
+        dexterity=fusion_dexterity,
+        intelligence=fusion_intelligence,
+        hit_points=fusion_hit_points,
+        inventory=fusion_inventory
+    )
+
+    first_character.delete()
+    second_character.delete()
+
+def grand_dexterity():
+    Character.objects.update(dexterity=30)
+
+def grand_intelligence():
+    Character.objects.update(intelligence=40)
+
+def grand_strength():
+    Character.objects.update(strength=50)
+
+def delete_characters():
+    Character.objects.filter(inventory='The inventory is empty').delete()
