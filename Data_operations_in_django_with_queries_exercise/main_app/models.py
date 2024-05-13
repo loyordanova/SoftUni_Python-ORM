@@ -11,7 +11,7 @@ class Pet(models.Model):
         max_length=40
     )
 
-# second_exercise --------------------------------------------------------------------------------
+# # second_exercise --------------------------------------------------------------------------------
 
 class Artifact(models.Model):
     name = models.CharField(
@@ -30,7 +30,7 @@ class Artifact(models.Model):
         default=False
     )
 
-# third_exercise --------------------------------------------------------------------------------
+# # third_exercise --------------------------------------------------------------------------------
 
 class Location(models.Model):
     name = models.CharField(
@@ -49,7 +49,7 @@ class Location(models.Model):
         default=False
     )
 
-# forth_exercise --------------------------------------------------------------------------------
+# # forth_exercise --------------------------------------------------------------------------------
 
 class Car(models.Model):
     model = models.CharField(
@@ -73,7 +73,7 @@ class Car(models.Model):
         default=0
     )
 
-# fifth_exercise -----------------------------------------------------------------------------------------
+# # fifth_exercise -----------------------------------------------------------------------------------------
     
 class Task(models.Model):
     title = models.CharField(
@@ -87,7 +87,7 @@ class Task(models.Model):
         default=False
     )
 
-# sixth_exercise -----------------------------------------------------------------------------------------
+# # sixth_exercise -----------------------------------------------------------------------------------------
 
 class HotelRoom(models.Model):
     ROOMS_TYPES = [

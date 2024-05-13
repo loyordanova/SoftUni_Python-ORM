@@ -236,37 +236,37 @@ def delete_last_room():
     if HotelRoom.objects.last().is_reserved:
         HotelRoom.objects.last().delete()
 
-def create_room():
-        HotelRoom.objects.create(
-            room_number=401,
-            room_type='Standard',
-            capacity=2,
-            amenities='TV',
-            price_per_night=100.00,
-            is_reserved=True
-        )
+# def create_room():
+#         HotelRoom.objects.create(
+#             room_number=401,
+#             room_type='Standard',
+#             capacity=2,
+#             amenities='TV',
+#             price_per_night=100.00,
+#             is_reserved=True
+#         )
 
-        HotelRoom.objects.create(
-            room_number=501,
-            room_type='Deluxe',
-            capacity=3,
-            amenities='Wi-Fi',
-            price_per_night=200.00,
-            is_reserved=True
-        )
+#         HotelRoom.objects.create(
+#             room_number=501,
+#             room_type='Deluxe',
+#             capacity=3,
+#             amenities='Wi-Fi',
+#             price_per_night=200.00,
+#             is_reserved=True
+#         )
 
-        HotelRoom.objects.create(
-            room_number=601,
-            room_type='Deluxe',
-            capacity=6,
-            amenities='Jacuzzi',
-            price_per_night=400.00,
-            is_reserved=False
-        )
-create_room()
+#         HotelRoom.objects.create(
+#             room_number=601,
+#             room_type='Deluxe',
+#             capacity=6,
+#             amenities='Jacuzzi',
+#             price_per_night=400.00,
+#             is_reserved=False
+#         )
+# # create_room()
 
 # test code:
 
 # reserve_first_room()
-# print(HotelRoom.objects.get(room_number=101).is_reserved)
+# print(HotelRoom.objects.get(room_number=601).is_reserved)
 # delete_last_room()
