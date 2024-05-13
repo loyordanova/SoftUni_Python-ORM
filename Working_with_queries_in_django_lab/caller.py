@@ -1,3 +1,4 @@
+from datetime import datetime
 import os
 import django
 
@@ -125,11 +126,54 @@ def filter_authors_by_nationalities(nationality):
     
     return '\n'.join(result)
 
-print("American authors:")
-print(filter_authors_by_nationalities('American'))
+# print("American authors:")
+# print(filter_authors_by_nationalities('American'))
+# print()
+# print("British authors:")
+# print(filter_authors_by_nationalities('British'))
+# print()
+# print("Authors with no nationalities:")
+# print(filter_authors_by_nationalities(None))
+
+# 6. Filter Authors by Birth Year ----------------------------------------
+
+def filter_authors_by_birth_year(first_year, second_year):
+     # Convert years to dates
+    first_date = datetime(first_year, 1, 1)
+    second_date = datetime(second_year, 12, 31)
+    
+    authors = Author.objects.filter(birth_date__range=(first_date, second_date)).order_by('-birth_date')
+
+    author_info = []
+    for author in authors:
+        author_info.append(f"{author.birth_date}: {author.first_name} {author.last_name}")
+    
+    return '\n'.join(author_info)
+
+# print("Authors born between 1980 and 2000:")
+# print(filter_authors_by_birth_year(1980, 2000))
+# print()
+# print("Authors born between 1950 and 1960:")
+# print(filter_authors_by_birth_year(1950, 1960))
+# print()
+# print("Authors born between 2000 and 2010:")
+# print(filter_authors_by_birth_year(2000, 2010))
+
+# 7. Change Reviewer's Name ----------------------------------------------
+
+def change_reviewer_name(old_name, new_name):
+    # Update all occurrences of the old name with the new name
+    Review.objects.filter(reviewer_name=old_name).update(reviewer_name=new_name)
+    
+    # Return a queryset of all reviews
+    return Review.objects.all()
+
+print("Change Alice Johnson to A.J.:")
+print(change_reviewer_name("Alice Johnson", "A.J."))
 print()
-print("British authors:")
-print(filter_authors_by_nationalities('British'))
+print("Change Bob Wilson to Bobby W.:")
+print(change_reviewer_name("Bob Wilson", "Bobby W."))
 print()
-print("Authors with no nationalities:")
-print(filter_authors_by_nationalities(None))
+print("Change A.J. to A. Johnson:")
+print(change_reviewer_name("A.J.", "A. Johnson"))
+
