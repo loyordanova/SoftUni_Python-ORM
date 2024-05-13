@@ -270,3 +270,49 @@ def delete_last_room():
 # reserve_first_room()
 # print(HotelRoom.objects.get(room_number=601).is_reserved)
 # delete_last_room()
+
+# seventh_exercise -----------------------------------------------------------------------------------------
+        
+from main_app.models import Character
+from django.db.models import Q, F
+
+def update_characters():
+
+    """
+    F expressions (F()):
+
+    F() expressions allow you to reference model field values within a query, enabling you to perform operations directly in the database without retrieving the data into Python memory.
+    They are useful for updating or filtering based on the values of other fields within the same model.
+    For example, F("field_name") represents the value of the field field_name in the database.
+
+    Q objects (Q()):
+
+    Q() objects are used to encapsulate complex query conditions, such as OR conditions, negations, and combinations of conditions.
+    They allow you to build dynamic queries with multiple conditions using logical operators like AND (&), OR (|), and NOT (~).
+    For example, Q(field1=value1) | Q(field2=value2) represents a query where either field1 equals value1 or field2 equals value2.
+    """
+
+    Character.objects.filter(class_name="Mage").update(level=F("level")+3, intelligence=F("intelligence")-7)
+    Character.objects.filter(class_name="Warrior").update(hit_points=F("hit_points") / 2, dexterity=F("dexterity") + 4)
+    Character.objects.filter(Q(class_name="Assassin") | Q(class_name="Scout")).update(inventory="The inventory is empty")
+
+    # another way to solve 
+
+    # characters = Character.objects.all()
+
+    # for character in characters:
+    #     if character.class_name == 'Mage':
+    #         character.level += 3
+    #         character.intelligence -= 7
+        
+    #     elif character.class_name == 'Warrior':
+    #         character.hit_points //= 2
+    #         character.dexterity += 4
+        
+    #     else:
+    #         character.inventory = 'The inventory is empty'
+        
+    #     character.save()
+
+def fuse_characters(first_character: obj, second_character: obj):
+    
