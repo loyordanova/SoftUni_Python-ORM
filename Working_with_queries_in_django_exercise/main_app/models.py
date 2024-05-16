@@ -60,3 +60,68 @@ class Workout(models.Model):
     difficulty = models.CharField(max_length=50)
     calories_burned = models.PositiveIntegerField()
     instructor = models.CharField(max_length=100)
+
+# 01. Artwork Gallery ---------------------------------------------------
+    
+class ArtworkGallery(models.Model):
+    artist_name = models.CharField(
+        max_length=100
+    )
+
+    art_name = models.CharField(
+        max_length=100
+    )
+
+    rating = models.IntegerField()
+
+    price = models.DecimalField(
+        max_digits=10,
+        decimal_places=2
+    )
+
+# 02. Laptop ---------------------------------------------------
+    
+    class Lapttop(models.Model):
+        BRAND_CHOICES = (
+            ("Asus", "Asus"),
+            ("Acer", "Acer"),
+            ("Apple", "Apple"),
+            ("Lenovo", "Lenovo"),
+            ("Dell", "Dell")
+        )
+
+        OS_CHOICES = (
+            ("Windows", "Windows"),
+            ("MacOS", "MacOS"),
+            ("Linux", "Linux"),
+            ("Chrome OS", "Chrome OS")
+        )
+
+        brand = models.CharField(
+            max_length=20,
+            choices=BRAND_CHOICES
+        )
+
+        processor = models.CharField(
+            max_length=100
+        )
+
+        memory = models.PositiveIntegerField(
+            help_text="Memory in GB"
+        )
+
+        storage = models.PositiveIntegerField(
+            help_text="Storage in GB"
+        )
+
+        operation_system = models.CharField(
+            max_length=20,
+            choices=OS_CHOICES
+        )
+
+        price = models.DecimalField(
+            max_digits=10,
+            decilam_places=2
+        )
+
+# 03. Chess Player ---------------------------------------------------
