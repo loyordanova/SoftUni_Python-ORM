@@ -1,3 +1,4 @@
+from datetime import date
 from django.db import models
 
 # 01. The Lecturer ---------------------------------------------------------
@@ -53,7 +54,8 @@ class Student(models.Model):
     )
 
     subjects = models.ManyToManyField(
-        'Subject'
+        'Subject',
+        through='StudentEnrollment'
     )
 
 # 03. The Enrollment ---------------------------------------------------------
@@ -78,10 +80,33 @@ class StudentEnrollment(models.Model):
     )
 
     enrollment_date = models.DateField(
-        auto_now=True
+        default=date.today
     )
 
     grade = models.CharField(
         max_length=1,
         choices=GRADES_CHOICES
+    )
+
+# 04. The Lecturer Profile --------------------------------------------------
+
+class LecturerProfile(models.Model):
+    lecturer = models.OneToOneField(
+        to='Lecturer',
+        on_delete=models.CASCADE
+    )
+
+    email = models.EmailField(
+        unique=True
+    )
+
+    bio = models.TextField(
+        blank=True,
+        null=True
+    )
+
+    office_location = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True
     )
