@@ -64,7 +64,7 @@ class Review(models.Model):
     )
 
 
-# 04. Licence -----------------------------------------------------------
+# 04. License -----------------------------------------------------------
     
 class Driver(models.Model):
     first_name = models.CharField(
@@ -77,7 +77,7 @@ class Driver(models.Model):
 
 class DrivingLicense(models.Model):
     license_number = models.CharField(
-        max_digits=10,
+        max_length=10,
         unique=True
     )
 

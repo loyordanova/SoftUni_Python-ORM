@@ -1,3 +1,4 @@
+from datetime import date, timedelta
 import os
 import django
 
@@ -5,7 +6,7 @@ import django
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "orm_skeleton.settings")
 django.setup()
 
-from main_app.models import Author, Book, Artist, Song, Product, Review
+from main_app.models import Author, Book, Artist, Song, Product, Review, DrivingLicense, Driver
 
 
 # 01. Library -----------------------------------------------------------
@@ -81,4 +82,21 @@ def get_products_with_no_reviews():
 def delete_products_without_reviews():
     Product.objects.filter(reviews__isnull=True).delete()
 
-# 04. Licence -----------------------------------------------------------
+# 04. License -----------------------------------------------------------
+
+def calculate_licenses_expiration_dates():
+    licenses = DrivingLicense.objects.order_by('-license_number')
+    exp_date_data = []
+
+    for license in licenses:
+        exp_date = license.issue_date + timedelta(days=365)
+        exp_date_data.append(f'License with number: {license.license_number} expires on {exp_date}!')
+
+    return '\n'.join(exp_date_data)
+
+def get_drivers_with_expired_licenses(due_date: date):
+    exp_cutoff_date = due_date - timedelta(days=365)
+
+    exp_drivers = Driver.objects.filter(drivinglicense_issue_date__gt=exp_cutoff_date)
+
+    return exp_drivers
