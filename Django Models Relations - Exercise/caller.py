@@ -6,7 +6,7 @@ import django
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "orm_skeleton.settings")
 django.setup()
 
-from main_app.models import Author, Book, Artist, Song, Product, Review, DrivingLicense, Driver
+from main_app.models import Author, Book, Artist, Car, Owner, Registration, Song, Product, Review, DrivingLicense, Driver
 
 
 # 01. Library -----------------------------------------------------------
@@ -84,19 +84,56 @@ def delete_products_without_reviews():
 
 # 04. License -----------------------------------------------------------
 
+# def calculate_licenses_expiration_dates():
+#     licenses = DrivingLicense.objects.order_by('-license_number')
+
+#     return '\n'.join(str(l) for l in licenses)
+
+# def get_drivers_with_expired_licenses(due_date: date):
+#     exp_cutoff_date = due_date - timedelta(days=365)
+
+#     exp_drivers = Driver.objects.filter(drivinglicense__issue_date__gt=exp_cutoff_date)
+
+#     return exp_drivers
+    
 def calculate_licenses_expiration_dates():
-    licenses = DrivingLicense.objects.order_by('-license_number')
-    exp_date_data = []
+    licenses = DrivingLicense.objects.all()
 
+    final_result = []
     for license in licenses:
-        exp_date = license.issue_date + timedelta(days=365)
-        exp_date_data.append(f'License with number: {license.license_number} expires on {exp_date}!')
+        expiration_date = license.issue_date + timedelta(days=365)
 
-    return '\n'.join(exp_date_data)
+        final_result.append(f"License with number: {license.license_number} expires on {expiration_date}!")
 
-def get_drivers_with_expired_licenses(due_date: date):
-    exp_cutoff_date = due_date - timedelta(days=365)
+    return '\n'.join(sorted(final_result, reverse=True))
 
-    exp_drivers = Driver.objects.filter(drivinglicense_issue_date__gt=exp_cutoff_date)
 
-    return exp_drivers
+def get_drivers_with_expired_licenses(due_date):
+    licenses = DrivingLicense.objects.all()
+
+    final_result_drivers = []
+    for license in licenses:
+        expiration_date = license.issue_date + timedelta(days=365)
+
+        if expiration_date > due_date:
+            final_result_drivers.append(license.driver)
+
+    return final_result_drivers
+
+
+# 04. Car Registration -----------------------------------------------------------
+
+def register_car_by_owner(owner: Owner):
+    registration = Registration.objects.filter(car__isnull=True).first()
+    car = Car.objects.filter(registration__isnull=True).first()
+
+    car.owner = owner
+
+    car.save()
+
+    registration.registration_date = date.today()
+    registration.car = car
+
+    registration.save()
+ 
+    return f"Successfully registered {car.model} to {owner.name} with registration number {registration.registration_number}."

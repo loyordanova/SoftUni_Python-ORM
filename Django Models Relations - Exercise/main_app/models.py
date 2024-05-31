@@ -1,3 +1,4 @@
+from datetime import timedelta
 from django.db import models
 
 # 1.	Library -------------------------------------------------------
@@ -88,3 +89,50 @@ class DrivingLicense(models.Model):
         on_delete=models.CASCADE,
         related_name='license'
     )
+
+    # def __str__(self):
+    #     exp_date = self.issue_date + timedelta(days=365)
+    #     return f'License with number: {self.license_number} expires on {exp_date}!'
+
+# 04. Car Registration -----------------------------------------------------------
+    
+class Owner(models.Model):
+    name = models.CharField(
+        max_length=50
+    )
+
+class Car(models.Model):
+    model = models.CharField(
+        max_length=50,
+    )
+
+    year = models.PositiveIntegerField()
+
+    owner = models.ForeignKey(
+        to=Owner,
+        on_delete=models.CASCADE,
+        related_name='cars',
+        null=True,
+        blank=True
+    )
+
+class Registration(models.Model):
+    registration_number = models.CharField(
+        max_length=10,
+        unique=True
+    )
+    
+    registration_date = models.DateField(
+        null=True,
+        blank=True
+    )
+
+    car = models.OneToOneField(
+        to=Car,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name='registration'
+    )
+
+# 04. Car Registration -----------------------------------------------------------
