@@ -135,4 +135,6 @@ class Registration(models.Model):
         related_name='registration'
     )
 
-# 04. Car Registration -----------------------------------------------------------
+
+# 04. Car Admin Setup -----------------------------------------------------------
+    
