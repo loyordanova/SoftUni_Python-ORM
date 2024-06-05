@@ -65,7 +65,7 @@ class ViperAssassin(Assassin):
         max_length=100
     )
 
-    nomous_bite_ability = models.CharField(
+    venomous_bite_ability = models.CharField(
         max_length=100
     )
 
@@ -90,3 +90,7 @@ class FelbladeDemonHunter(DemonHunter):
     felblade_ability = models.CharField(
         max_length=100
     )
+
+
+# 02. Chat App -------------------------------------------------------------------
+    
