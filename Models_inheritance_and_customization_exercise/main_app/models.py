@@ -1,4 +1,6 @@
+from typing import Any
 from django.db import models
+from django.forms import ValidationError
 
 # 01. Character Classes -------------------------------------------------------------
 
@@ -156,3 +158,67 @@ class Message(models.Model):
         forward_message.save()
 
         return forward_message
+    
+# 03. Student Information ----------------------------------------------------------
+# CHECK DURING LIVE EXERCISE !!!!
+    
+class StudentIDField(models.PositiveIntegerField):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def get_prep_value(self, value):
+        if value is None:
+            return value
+
+        try:
+            # Convert the value to an integer
+            value = int(value)
+        except (ValueError, TypeError):
+            raise ValidationError("Invalid input for student ID")
+
+        # Check if the value is positive
+        if value <= 0:
+            raise ValidationError("ID cannot be less than or equal to zero")
+
+        return value
+
+    def validate(self, value, model_instance):
+        # Convert the value to an integer
+        value = self.get_prep_value(value)
+        super().validate(value, model_instance)
+
+class Student(models.Model):
+    name = models.CharField(
+        max_length=100
+    )
+
+    student_id = StudentIDField()
+
+# 04. Credit Card Masking ---------------------------------------------------------
+    
+class MaskedCreditCardField(models.CharField):
+    def __init__(self, *args, **kwargs):
+        kwargs['max_length'] = 20
+
+        super().__init__(*args, **kwargs)
+ 
+    def to_python(self, value):
+        if not isinstance(value, str):
+            raise ValidationError("The card number must be a string")
+        
+        if not all(d.isdigit() for d in value):
+            raise ValidationError("The card number must contain only digits")
+        
+        if len(value) != 16:
+            raise ValidationError("The card number must be exactly 16 characters long")
+    
+        return f"****-****-****-{value[-4:]}"
+    
+
+class CreditCard(models.Model):
+    card_owner = models.CharField(
+        max_length=100
+    )
+
+    card_number = MaskedCreditCardField()
+
