@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.validators import MinLengthValidator, MaxLengthValidator, MinValueValidator, MaxValueValidator
+from django.forms import ValidationError
 
 # 01 Restaurant ---------------------------------------------------------------------
 class Restaurant(models.Model):
@@ -34,3 +35,30 @@ class Restaurant(models.Model):
     )
 
 # 02 Menu -----------------------------------------------------------------------
+
+def validate_menu_categories(value):
+    categories = ["Appetizers", "Main Course", "Desserts"]
+
+    for category in categories:
+        if category.lower() not in value.lower():
+            raise ValidationError('The menu must include each of the categories "Appetizers", "Main Course", "Desserts".')
+    
+
+class Menu(models.Model):
+    name = models.CharField(
+        max_length=100
+    )
+
+    description = models.TextField(
+        validators=[validate_menu_categories]
+    )
+
+    restaurant = models.ForeignKey(
+        to=Restaurant,
+        on_delete=models.CASCADE
+    )
+
+# 03 Restaurant Review -----------------------------------------------------------
+
+# 04 Restaurant Review Types -----------------------------------------------------
+    
