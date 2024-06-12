@@ -60,5 +60,16 @@ class Menu(models.Model):
 
 # 03 Restaurant Review -----------------------------------------------------------
 
+class RestaurantReview(models.Model):
+    reviewer_name = models.CharField(
+        max_length=100,
+    )
 
-    
+    restaurant = models.ForeignKey(
+        to=Restaurant,
+        on_delete=models.CASCADE
+    )
+
+    review_content = models.TextField()
+
+    rating = models.PositiveIntegerField()
