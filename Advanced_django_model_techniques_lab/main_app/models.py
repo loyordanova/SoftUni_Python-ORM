@@ -72,4 +72,8 @@ class RestaurantReview(models.Model):
 
     review_content = models.TextField()
 
-    rating = models.PositiveIntegerField()
+    rating = models.PositiveIntegerField(
+        validators=[
+            MaxValueValidator(5)
+        ]
+    )
