@@ -74,6 +74,15 @@ class RestaurantReview(models.Model):
 
     rating = models.PositiveIntegerField(
         validators=[
-            MaxValueValidator(5)
+            MaxValueValidator(limit_value=5)
         ]
     )
+
+    class Meta:
+        ordering = ['-rating']
+
+        verbose_name = 'Restaurant Review'
+
+        verbose_name_plural = 'Restaurant Reviews'
+
+        unique_together = ['reviewer_name', 'restaurant']
