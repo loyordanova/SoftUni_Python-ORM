@@ -86,3 +86,5 @@ class RestaurantReview(models.Model):
         verbose_name_plural = 'Restaurant Reviews'
 
         unique_together = ['reviewer_name', 'restaurant']
+
+# 04 
