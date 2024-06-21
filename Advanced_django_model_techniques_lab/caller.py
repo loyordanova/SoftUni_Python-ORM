@@ -1,6 +1,7 @@
 import os
 import django
 from django.forms import ValidationError
+from main_app.models import Restaurant, Menu
 
 # Set up Django
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "orm_skeleton.settings")
@@ -41,7 +42,6 @@ django.setup()
 
 # 02 Menu -----------------------------------------------------------------------
 
-from main_app.models import Restaurant, Menu
 
 # Keep the data from the previous exercise, so you can reuse it
 
