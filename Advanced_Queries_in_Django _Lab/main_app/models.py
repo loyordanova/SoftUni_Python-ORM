@@ -1,16 +1,8 @@
 from django.db import models
 from django.db.models import Sum
 
+from main_app.managers import ProductManager
 
-class ProductManager(models.Manager):
-    def available_products(self):
-        return self.filter(is_available=True) 
-    
-    def available_products_in_category(self, category_name: str):
-        return self.filter(
-            is_available=True,
-            category__name=category_name
-                           )
 
 def product_quantity_ordered():
     total_products_ordered = Product.objects.annotate(total_ordered_quantity=Sum('orderproduct__quantity')).exclude(total_ordered_quantity=None).order_by('-total_ordered_quantity')
