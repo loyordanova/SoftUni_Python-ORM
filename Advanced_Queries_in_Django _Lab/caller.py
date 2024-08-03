@@ -88,6 +88,17 @@ def filter_products():
 
     return '\n'.join(result)
 
+def give_discount():
+    reduction = F('price') * 0.7
+    query = Q(is_available=True) & Q(price__gt=3.00)
+    Product.objects.filter(query).update(price=reduction)
+    all_available_products = (Product.objects.filter(is_available=True).order_by('-price', 'name'))
+
+    result = []
+    for product in all_available_products:
+        result.append(f'{product.name}: {product.price}lv.')
+    
+    return '\n'.join(result)
 # print(product_quantity_ordered())
 # print(ordered_products_per_customer())
  
